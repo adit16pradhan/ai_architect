@@ -9,7 +9,6 @@
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Three.js library for 3D rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
@@ -51,13 +50,15 @@
         #hero-visual {
             perspective: 2000px;
             width: 100%;
-            height: 100%;
-            min-height: 400px;
+            /* Decreased min-height for more text space */
+            height: 300px; /* Adjusted fixed height for smaller visual */
+            min-height: 250px; /* Reduced minimum height */
             display: flex; /* Ensures canvas centers */
             align-items: center;
             justify-content: center;
             position: relative; /* Needed for canvas absolute positioning */
             z-index: 0; /* Ensure it's behind text content */
+            margin-top: 2rem; /* Added margin to push it down slightly from text */
         }
 
         #three-network-canvas { 
@@ -124,6 +125,7 @@
         .chart-container {
             position: relative; margin: auto;
             height: 100%; min-height: 400px;
+            padding: 1rem; /* Added padding to ensure labels are not cut off */
         }
         .animated-icon { transition: transform 0.3s ease; }
         .group:hover .animated-icon { transform: rotate(-15deg) scale(1.1); }
@@ -146,9 +148,11 @@
     <div class="relative min-h-screen">
         
         <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <header class="flex justify-center items-center py-6 relative">
-                <h1 class="font-bold text-5xl">AI Architect</h1> <!-- Changed text-2xl to text-5xl -->
-                <div class="fixed top-6 right-6 z-50">
+            <header class="flex justify-between items-center py-6 relative">
+                <!-- Applied text-4xl md:text-5xl for "AI Architect" to match the heading below -->
+                <!-- Added responsive right padding to prevent overlap with the toggle -->
+                <h1 class="font-bold text-4xl md:text-5xl pr-16 md:pr-24">AI Architect</h1>
+                <div class="z-50"> 
                     <label for="theme-toggle" class="flex items-center cursor-pointer p-2 rounded-full bg-[var(--card-bg)] border border-[var(--card-border)]">
                         <input type="checkbox" id="theme-toggle" class="sr-only">
                         <svg class="w-6 h-6 sun-icon fill-current text-[var(--subtle-text)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.697 6.046a.75.75 0 011.06.023l1.592 1.592a.75.75 0 01-1.06 1.06l-1.592-1.592a.75.75 0 01-.023-1.06zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25a.75.75 0 01.75.75zM19.78 18.697a.75.75 0 01-1.06.023l-1.592-1.592a.75.75 0 111.06-1.06l1.592 1.592a.75.75 0 01.023 1.06zM12 21.75a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0v2.25a.75.75 0 01-.75-.75zM5.303 19.78a.75.75 0 01-.023-1.06l1.592-1.592a.75.75 0 011.06 1.06l-1.592 1.592a.75.75 0 01-1.037.001zM2.25 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3a.75.75 0 01-.75-.75zM6.046 5.303a.75.75 0 01.023 1.06l-1.592 1.592a.75.75 0 11-1.06-1.06l1.592-1.592a.75.75 0 011.037-.001z"/></svg>
@@ -164,7 +168,6 @@
                         A structured path to becoming an AI expert.
                     </h2>
                 </div>
-                <!-- Three.js Network Visual will be rendered here -->
                 <div id="hero-visual" class="flex items-center justify-center">
                     <canvas id="three-network-canvas"></canvas>
                 </div>
@@ -266,26 +269,26 @@
                         </div>
                     </a>
                    <a href="https://cloud.google.com/learn/certification/conversational-ai-engineer" target="_blank" class="block apple-card p-6 group">
-                                <div class="flex justify-between items-start">
-                                   <div>
-                                        <p class="text-sm font-bold text-[var(--subtle-text)]">Google Cloud</p>
-                                        <h3 class="text-xl font-bold mt-1">Conversational AI Engineer</h3>
-                                   </div>
-                                   <svg class="w-8 h-8 text-[var(--subtle-text)] animated-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5a6 6 0 00-6-6h-1.5a6 6 0 00-6 6v1.5a6 6 0 006 6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 00-6-6v-1.5a6 6 0 006-6h1.5a6 6 0 006 6v1.5a6 6 0 00-6 6z" /></svg>
-                                </div>
+                                 <div class="flex justify-between items-start">
+                                     <div>
+                                         <p class="text-sm font-bold text-[var(--subtle-text)]">Google Cloud</p>
+                                         <h3 class="text-xl font-bold mt-1">Conversational AI Engineer</h3>
+                                     </div>
+                                     <svg class="w-8 h-8 text-[var(--subtle-text)] animated-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5a6 6 0 00-6-6h-1.5a6 6 0 00-6 6v1.5a6 6 0 006 6z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 00-6-6v-1.5a6 6 0 006-6h1.5a6 6 0 006 6v1.5a6 6 0 00-6 6z" /></svg>
+                                 </div>
                     </a>
                    <a href="https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/" target="_blank" class="block apple-card p-6 group">
-                                <div class="flex justify-between items-start">
-                                   <div>
-                                        <p class="text-sm font-bold text-[var(--subtle-text)]">Microsoft Azure</p>
-                                        <h3 class="text-xl font-bold mt-1">AI Engineer Associate</h3>
-                                   </div>
-                                   <svg class="w-8 h-8 text-[var(--subtle-text)] animated-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>
-                                </div>
+                                 <div class="flex justify-between items-start">
+                                     <div>
+                                         <p class="text-sm font-bold text-[var(--subtle-text)]">Microsoft Azure</p>
+                                         <h3 class="text-xl font-bold mt-1">AI Engineer Associate</h3>
+                                     </div>
+                                     <svg class="w-8 h-8 text-[var(--subtle-text)] animated-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>
+                                 </div>
                     </a>
                 </div>
             </section>
-
+            
             <section class="fade-in mb-32">
                 <div class="text-center mb-16">
                     <h2 class="font-bold text-4xl">Build Your Portfolio</h2>
@@ -537,8 +540,9 @@
         };
 
 
-        // --- Chart.js Logic (unchanged) ---
+        // --- Chart.js Logic (updated) ---
         let skillChart;
+        // Reverted to original longer labels as requested
         const skillLabels = ['Python & ML', 'Cloud Platforms', 'Chatbot Frameworks', 'API Integration', 'Project Management'];
         const initialData = [4, 2, 2, 3, 5];
 
@@ -551,6 +555,15 @@
             const pointLabelColor = isDark ? '#A0AEC0' : '#4A5568';
             const accentColor = isDark ? '#0A84FF' : '#007AFF';
             const targetColor = isDark ? '#4A5568' : '#A0AEC0';
+
+            // Determine font size for point labels based on screen width
+            let pointLabelFontSize = 12; // Default for larger screens
+            if (window.innerWidth < 640) { // Mobile breakpoint
+                pointLabelFontSize = 7; // Further decreased for very small screens with longer labels
+            } else if (window.innerWidth < 1024) { // Tablet breakpoint
+                pointLabelFontSize = 9; // Adjusted for tablet size
+            }
+
 
             const chartData = {
                 labels: skillLabels,
@@ -580,8 +593,8 @@
                     maintainAspectRatio: false,
                     scales: { r: {
                         angleLines: { color: gridColor }, grid: { color: gridColor },
-                        pointLabels: { font: { size: 12, family: "'Satoshi', sans-serif" }, color: pointLabelColor },
-                        ticks: { backdropColor: 'transparent', stepSize: 2, color: pointLabelColor },
+                        pointLabels: { font: { size: pointLabelFontSize, family: "'Satoshi', sans-serif" }, color: pointLabelColor },
+                        ticks: { backdropColor: 'transparent', stepSize: 2, color: pointLabelColor, display: false }, /* Hide ticks to save space */
                         min: 0, max: 10
                     }},
                     plugins: { legend: { labels: { color: pointLabelColor, font: { family: "'Satoshi', sans-serif" } } } }
@@ -589,18 +602,24 @@
             });
         }
         document.addEventListener('DOMContentLoaded', renderSkillChart);
+        window.addEventListener('resize', () => {
+            // Re-render chart on resize to adjust font size
+            renderSkillChart(skillChart ? skillChart.data.datasets[0].data : initialData);
+        });
+
 
         document.querySelectorAll('.roadmap-week').forEach(week => {
             week.addEventListener('mouseenter', () => {
                 const projection = JSON.parse(week.dataset.skillProjection);
                 const projectedData = [...initialData];
-                projectedData[0] += (projection.python || 0);
-                projectedData[1] += (projection.cloud || 0);
-                projectedData[2] += (projection.chatbot || 0);
-                projectedData[3] += (projection.api || 0);
-                projectedData[4] += (projection.pm || 0);
+                // Ensure values don't exceed 10
+                projectedData[0] = Math.min(initialData[0] + (projection.python || 0), 10);
+                projectedData[1] = Math.min(initialData[1] + (projection.cloud || 0), 10);
+                projectedData[2] = Math.min(initialData[2] + (projection.chatbot || 0), 10);
+                projectedData[3] = Math.min(initialData[3] + (projection.api || 0), 10);
+                projectedData[4] = Math.min(initialData[4] + (projection.pm || 0), 10);
                 
-                skillChart.data.datasets[0].data = projectedData.map(d => Math.min(d, 10));
+                skillChart.data.datasets[0].data = projectedData;
                 skillChart.data.datasets[0].label = "Projected Skills";
                 skillChart.update();
             });
@@ -652,7 +671,7 @@
                  .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold text-[var(--accent-color)] mt-6 mb-3">$1</h2>')
                  .replace(/`([^`]+)`/g, '<code class="bg-[var(--button-bg)] text-[var(--button-text)] text-sm rounded px-1 py-0.5">$1</code>')
                  .replace(/^ {0,2}[-*+] (.*$)/gim, '<li class="ml-6 list-disc mb-2">$1</li>');
-            html = html.replace(/(<li.*<\/li>)/gs, '<ul>$1</ul>').replace(/<\/ul>\s*<ul>/g, '');
+             html = html.replace(/(<li.*<\/li>)/gs, '<ul>$1</ul>').replace(/<\/ul>\s*<ul>/g, '');
             
             if (responseType === 'tutor') {
                 html = html.replace(/\[\[(.*?)\]\]/g, '<span class="clickable-keyword" onclick="explainConcept(\'$1\')">$1</span>');
