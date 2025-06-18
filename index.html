@@ -626,7 +626,7 @@
         }
         
         async function callGemini(prompt) {
-            const apiKey = "AIzaSyCTgFb1r-tUcyeHsXaKF8KWRkPZ7dnHwy4"; // IMPORTANT: Add API key here
+            const apiKey = ""; // IMPORTANT: Add API key here
             if (!apiKey) return "<h2>API Key Missing</h2><p>Please add your Google Gemini API key to the `callGemini` function in the JavaScript code to enable this feature.</p>";
             
             let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
