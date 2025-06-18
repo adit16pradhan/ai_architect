@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Architect Career Planner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .section-header {
+             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .week-btn {
+            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+        }
+        .week-btn:hover {
+            box-shadow: 0 0 15px rgba(130, 140, 248, 0.4);
+        }
+        .week-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .custom-checkbox.checked {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+        .custom-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -52%);
+            font-weight: bold;
+            font-size: 14px;
+        }
+        /* Gemini Feature Button */
+        .gemini-btn {
+            background-color: #8b5cf6; /* purple-500 */
+            color: white;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .gemini-btn:hover {
+            background-color: #7c3aed; /* purple-600 */
+        }
+
+        /* Modal Styles */
+        #modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 40;
+        }
+        #modal-content {
+            max-height: 80vh;
+        }
+        
+        /* Loading Spinner */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: #8b5cf6;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+        <div class="bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-2xl shadow-black/30 p-6 sm:p-8">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-center gradient-text">🚀 Your AI Chatbot Architect Career Planner</h1>
+            <p class="text-center text-gray-400 mt-4 max-w-2xl mx-auto">"The secret to getting ahead is getting started." — Mark Twain. Let's build your future, one step at a time.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 text-center">
+                <div class="bg-gray-700/60 rounded-xl p-4 shadow-lg">
+                    <div class="text-3xl font-bold text-indigo-400" id="totalHours">0</div>
+                    <div class="text-sm text-gray-400">Hours Completed</div>
+                </div>
+                <div class="bg-gray-700/60 rounded-xl p-4 shadow-lg">
+                    <div class="text-3xl font-bold text-indigo-400" id="completionRate">0%</div>
+                    <div class="text-sm text-gray-400">Task Completion</div>
+                </div>
+                <div class="bg-gray-700/60 rounded-xl p-4 shadow-lg">
+                    <div class="text-3xl font-bold text-indigo-400" id="streakDays">0</div>
+                    <div class="text-sm text-gray-400">Study Streak</div>
+                </div>
+            </div>
+
+            <div class="flex justify-center flex-wrap gap-3 my-8 week-selector">
+                <button class="week-btn text-white font-semibold py-2 px-6 rounded-full shadow-md transition-all transform hover:scale-105" data-schedule="weekday" onclick="showWeek('weekday', this)">📅 Weekdays</button>
+                <button class="week-btn text-white font-semibold py-2 px-6 rounded-full shadow-md transition-all transform hover:scale-105" data-schedule="weekend" onclick="showWeek('weekend', this)">🏖️ Weekends</button>
+                <button class="week-btn active text-white font-semibold py-2 px-6 rounded-full shadow-md transition-all transform hover:scale-105" data-schedule="rotation" onclick="showWeek('rotation', this)">🎯 Career Roadmap</button>
+            </div>
+
+            <!-- WEEKDAY SCHEDULE -->
+            <div id="weekday-schedule" class="schedule-section hidden">
+                <h2 class="section-header text-2xl font-bold text-white text-center rounded-xl p-4 my-6">📚 Weekday Schedule (Monday - Friday)</h2>
+                <div class="overflow-x-auto bg-gray-800 rounded-xl shadow-lg">
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-white uppercase bg-gradient-to-r from-indigo-600 to-purple-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Time Slot</th>
+                                <th scope="col" class="px-6 py-3">Duration</th>
+                                <th scope="col" class="px-6 py-3">Activity Type</th>
+                                <th scope="col" class="px-6 py-3">Primary Focus</th>
+                                <th scope="col" class="px-6 py-3">Complete</th>
+                                <th scope="col" class="px-6 py-3">Notes & Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <tr class="bg-gray-800 border-b border-gray-700">
+                                <td class="px-6 py-4 font-medium text-gray-200">7:00 - 10:00 AM</td>
+                                <td class="px-6 py-4" data-hours="3">3 hrs</td>
+                                <td class="px-6 py-4">🧠 Deep Learning</td>
+                                <td class="px-6 py-4 font-semibold text-white">Core Topic Study</td>
+                                <td class="px-6 py-4">
+                                    <div class="custom-checkbox w-6 h-6 border-2 border-indigo-400 rounded cursor-pointer relative" onclick="toggleCheck(this)"></div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <textarea class="w-full h-16 p-2 border border-gray-600 bg-gray-700 text-gray-200 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Concepts learned..."></textarea>
+                                </td>
+                            </tr>
+                             <tr class="bg-gray-800/50 border-b border-gray-700">
+                                <td class="px-6 py-4 font-medium text-gray-200">11:00 AM - 2:00 PM</td>
+                                <td class="px-6 py-4" data-hours="3">3 hrs</td>
+                                <td class="px-6 py-4">⚡ Practical Session</td>
+                                <td class="px-6 py-4 font-semibold text-white">Hands-on Practice / Labs</td>
+                                <td class="px-6 py-4">
+                                    <div class="custom-checkbox w-6 h-6 border-2 border-indigo-400 rounded cursor-pointer relative" onclick="toggleCheck(this)"></div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <textarea class="w-full h-16 p-2 border border-gray-600 bg-gray-700 text-gray-200 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Code snippets, results..."></textarea>
+                                </td>
+                            </tr>
+                            <tr class="bg-gray-800 border-b border-gray-700">
+                                <td class="px-6 py-4 font-medium text-gray-200">3:00 - 6:00 PM</td>
+                                <td class="px-6 py-4" data-hours="3">3 hrs</td>
+                                <td class="px-6 py-4">🚀 Project Work</td>
+                                <td class="px-6 py-4 font-semibold text-white">Portfolio Project Building</td>
+                                <td class="px-6 py-4">
+                                    <div class="custom-checkbox w-6 h-6 border-2 border-indigo-400 rounded cursor-pointer relative" onclick="toggleCheck(this)"></div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <textarea class="w-full h-16 p-2 border border-gray-600 bg-gray-700 text-gray-200 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Project progress..."></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- WEEKEND SCHEDULE -->
+            <div id="weekend-schedule" class="schedule-section hidden">
+                 <h2 class="section-header text-2xl font-bold text-white text-center rounded-xl p-4 my-6">🏖️ Weekend Schedule (Saturday - Sunday)</h2>
+                 <div class="overflow-x-auto bg-gray-800 rounded-xl shadow-lg">
+                    <table class="w-full text-sm text-left text-gray-400">
+                         <thead class="text-xs text-white uppercase bg-gradient-to-r from-indigo-600 to-purple-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Time Slot</th>
+                                <th scope="col" class="px-6 py-3">Duration</th>
+                                <th scope="col" class="px-6 py-3">Activity Type</th>
+                                <th scope="col" class="px-6 py-3">Primary Focus</th>
+                                <th scope="col" class="px-6 py-3">Complete</th>
+                                <th scope="col" class="px-6 py-3">Notes & Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <tr class="bg-gray-800 border-b border-gray-700">
+                                <td class="px-6 py-4 font-medium text-gray-200">8:00 AM - 12:00 PM</td>
+                                <td class="px-6 py-4" data-hours="4">4 hrs</td>
+                                <td class="px-6 py-4">🔗 Integration Projects</td>
+                                <td class="px-6 py-4 font-semibold text-white">Cross-domain Work / Review</td>
+                                <td class="px-6 py-4">
+                                    <div class="custom-checkbox w-6 h-6 border-2 border-indigo-400 rounded cursor-pointer relative" onclick="toggleCheck(this)"></div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <textarea class="w-full h-16 p-2 border border-gray-600 bg-gray-700 text-gray-200 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="Connecting topics..."></textarea>
+                                </td>
+                            </tr>
+                            <tr class="bg-gray-800/50 border-b border-gray-700">
+                                <td class="px-6 py-4 font-medium text-gray-200">1:00 PM - 4:00 PM</td>
+                                <td class="px-6 py-4" data-hours="3">3 hrs</td>
+                                <td class="px-6 py-4">🎯 Catch-up / Advanced</td>
+                                <td class="px-6 py-4 font-semibold text-white">Explore advanced topics</td>
+                                <td class="px-6 py-4">
+                                    <div class="custom-checkbox w-6 h-6 border-2 border-indigo-400 rounded cursor-pointer relative" onclick="toggleCheck(this)"></div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <textarea class="w-full h-16 p-2 border border-gray-600 bg-gray-700 text-gray-200 rounded-md focus:ring-indigo-500 focus:border-indigo-500" placeholder="New libraries, articles..."></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CAREER ROADMAP / ROTATION -->
+            <div id="rotation-schedule" class="schedule-section">
+                <h2 class="section-header text-2xl font-bold text-white text-center rounded-xl p-4 my-6">🎯 Your Chatbot Architect Career Roadmap</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-orange-900/40 border-l-4 border-orange-400 p-4 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-orange-200">🗣️ Conversational AI & NLP Fundamentals</h3>
+                        <p class="text-sm text-orange-300 mt-1">Master the theory behind how machines understand and respond to human language.</p>
+                    </div>
+                     <div class="bg-sky-900/40 border-l-4 border-sky-400 p-4 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-sky-200">🤖 Chatbot Platforms (Dialogflow & Rasa)</h3>
+                        <p class="text-sm text-sky-300 mt-1">Gain hands-on experience with industry-standard tools to build powerful chatbots.</p>
+                    </div>
+                     <div class="bg-teal-900/40 border-l-4 border-teal-400 p-4 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-teal-200">🐍 Python & API Integration</h3>
+                        <p class="text-sm text-teal-300 mt-1">Learn to write backend code to connect your chatbot to databases and services.</p>
+                    </div>
+                     <div class="bg-purple-900/40 border-l-4 border-purple-400 p-4 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-purple-200">☁️ Cloud Deployment & LLMs</h3>
+                        <p class="text-sm text-purple-300 mt-1">Understand how to deploy bots on GCP/Azure and leverage Large Language Models.</p>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold text-gray-300 mt-8 mb-4">4-Week Skill Sprint</h3>
+                <div class="overflow-x-auto bg-gray-800 rounded-xl shadow-lg mb-8">
+                     <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-white uppercase bg-gradient-to-r from-indigo-600 to-purple-700">
+                            <tr>
+                                <th class="px-6 py-3">Week</th>
+                                <th class="px-6 py-3">Focus</th>
+                                <th class="px-6 py-3">Goal</th>
+                                <th class="px-6 py-3">AI Tutor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="week-1" class="bg-gray-800 border-b border-gray-700">
+                                <td class="px-6 py-4 font-bold text-white">Week 1</td>
+                                <td class="px-6 py-4" data-primary="Python Basics & NLP Concepts" data-secondary="Intro to Conversational Design">Python Basics & NLP Concepts</td>
+                                <td class="px-6 py-4">Build a simple rule-based FAQ bot.</td>
+                                <td class="px-6 py-4"><button class="gemini-btn" onclick="generateWeeklyTasks('week-1')">✨ Break Down Week</button></td>
+                            </tr>
+                            <tr id="week-2" class="bg-gray-800/50 border-b border-gray-700">
+                                <td class="px-6 py-4 font-bold text-white">Week 2</td>
+                                <td class="px-6 py-4" data-primary="Google Dialogflow (Intents, Entities)" data-secondary="API Integration with Python (Flask)">Google Dialogflow (Intents, Entities)</td>
+                                <td class="px-6 py-4">Create a Dialogflow bot that calls an external API.</td>
+                                <td class="px-6 py-4"><button class="gemini-btn" onclick="generateWeeklyTasks('week-2')">✨ Break Down Week</button></td>
+                            </tr>
+                             <tr id="week-3" class="bg-gray-800 border-b border-gray-700">
+                                <td class="px-6 py-4 font-bold text-white">Week 3</td>
+                                <td class="px-6 py-4" data-primary="Intro to Rasa (NLU, Core)" data-secondary="Cloud Functions (GCP/Azure)">Intro to Rasa (NLU, Core)</td>
+                                <td class="px-6 py-4">Deploy a simple webhook to the cloud.</td>
+                                <td class="px-6 py-4"><button class="gemini-btn" onclick="generateWeeklyTasks('week-3')">✨ Break Down Week</button></td>
+                            </tr>
+                            <tr id="week-4" class="bg-gray-800/50">
+                                <td class="px-6 py-4 font-bold text-white">Week 4</td>
+                                <td class="px-6 py-4" data-primary="LLM Fundamentals & Integration" data-secondary="Portfolio Polishing & Review">LLM Fundamentals & Integration</td>
+                                <td class="px-6 py-4">Start the "Airline Customer Service Bot" project.</td>
+                                <td class="px-6 py-4"><button class="gemini-btn" onclick="generateWeeklyTasks('week-4')">✨ Break Down Week</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-300 mb-4">🎓 Recommended Certifications</h3>
+                        <ul class="space-y-4">
+                            <li class="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700/80 transition-colors">
+                                <a href="https://www.coursera.org/specializations/natural-language-processing" target="_blank" class="font-semibold text-indigo-400 hover:underline">Natural Language Processing Specialization</a>
+                                <p class="text-sm text-gray-400">by DeepLearning.AI on Coursera. A comprehensive dive into NLP.</p>
+                            </li>
+                             <li class="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700/80 transition-colors">
+                                <a href="https://cloud.google.com/learn/certification/conversational-ai-engineer" target="_blank" class="font-semibold text-indigo-400 hover:underline">Google Cloud Conversational AI Engineer</a>
+                                <p class="text-sm text-gray-400">The industry standard for Dialogflow CX expertise. (Focus on learning path first).</p>
+                            </li>
+                             <li class="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700/80 transition-colors">
+                                <a href="https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/" target="_blank" class="font-semibold text-indigo-400 hover:underline">Microsoft Certified: Azure AI Engineer Associate</a>
+                                <p class="text-sm text-gray-400">Great for understanding the broader AI ecosystem on a major cloud platform.</p>
+                            </li>
+                        </ul>
+                    </div>
+                     <div>
+                        <h3 class="text-xl font-bold text-gray-300 mb-4">🛠️ Portfolio-Builder Projects</h3>
+                         <ul class="space-y-4">
+                            <li class="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700/80 transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-semibold text-gray-200" data-title="Airline Customer Service Bot">Airline Customer Service Bot</p>
+                                        <p class="text-sm text-gray-400" data-description="Handles flight status, bookings, and baggage queries. Directly relevant to the Air India role.">Handles flight status, bookings, and baggage queries.</p>
+                                    </div>
+                                    <button class="gemini-btn flex-shrink-0 ml-4" onclick="generateProjectPlan(this)">✨ Expand Idea</button>
+                                </div>
+                            </li>
+                             <li class="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700/80 transition-colors">
+                                <div class="flex justify-between items-start">
+                                     <div>
+                                        <p class="font-semibold text-gray-200" data-title="Voice-Enabled Booking Agent">Voice-Enabled Booking Agent</p>
+                                        <p class="text-sm text-gray-400" data-description="Use Dialogflow or Lex to allow users to book flights using their voice, integrating with a mock API.">Use Dialogflow or Lex to book flights by voice.</p>
+                                     </div>
+                                     <button class="gemini-btn flex-shrink-0 ml-4" onclick="generateProjectPlan(this)">✨ Expand Idea</button>
+                                </div>
+                            </li>
+                            <li class="bg-gray-800 p-4 rounded-lg shadow-lg hover:bg-gray-700/80 transition-colors">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-semibold text-gray-200" data-title="Proactive Flight Notification Bot">Proactive Flight Notification Bot</p>
+                                        <p class="text-sm text-gray-400" data-description="A bot that notifies users about gate changes, delays, or check-in reminders via a messaging app like WhatsApp or Telegram.">Notifies users about flight updates on messaging apps.</p>
+                                    </div>
+                                    <button class="gemini-btn flex-shrink-0 ml-4" onclick="generateProjectPlan(this)">✨ Expand Idea</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="modal-overlay" class="hidden" onclick="closeModal()">
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-gray-800 border border-gray-600 rounded-2xl shadow-2xl w-full max-w-2xl" onclick="event.stopPropagation()">
+                <div id="modal-content" class="p-6 overflow-y-auto text-gray-300">
+                    <!-- Loading spinner -->
+                    <div id="loader-container" class="text-center py-10">
+                         <span class="loader"></span>
+                         <p class="mt-4 font-semibold">✨ Gemini is thinking...</p>
+                    </div>
+                    <!-- AI content will be injected here -->
+                    <div id="ai-content-container"></div>
+                </div>
+                <div class="px-6 py-3 bg-gray-700/50 rounded-b-2xl text-right">
+                    <button class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-full" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Modal Control ---
+        const modalOverlay = document.getElementById('modal-overlay');
+        const loaderContainer = document.getElementById('loader-container');
+        const aiContentContainer = document.getElementById('ai-content-container');
+
+        function openModal() {
+            aiContentContainer.innerHTML = ''; // Clear previous content
+            loaderContainer.style.display = 'block';
+            modalOverlay.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modalOverlay.classList.add('hidden');
+        }
+        
+        // --- Gemini API Call ---
+        async function callGemini(prompt) {
+             let chatHistory = [];
+             chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+             const payload = { contents: chatHistory };
+             const apiKey = ""; // Left empty as per instructions
+             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+             
+             try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API call failed with status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Unexpected response structure:", result);
+                    return "Sorry, I couldn't get a valid response from the AI. The response format might have changed. Please check the console.";
+                }
+
+             } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                return `An error occurred while contacting the AI. Please check the browser console for details. (Error: ${error.message})`;
+             }
+        }
+        
+        function formatAIResponse(text) {
+            // Basic markdown to HTML conversion
+            let html = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')     // Italics
+                .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold text-indigo-300 mt-4 mb-2">$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold text-indigo-200 mt-6 mb-3">$1</h2>')
+                .replace(/^ {0,2}[-*+] (.*$)/gim, '<li class="ml-6 list-disc">$1</li>'); // Unordered list
+
+            // Wrap list items in <ul>
+            html = html.replace(/(<li.*<\/li>)/gs, '<ul>$1</ul>');
+            // Clean up multiple <ul> tags
+            html = html.replace(/<\/ul>\s*<ul>/g, '');
+
+            return html.replace(/\n/g, '<br>');
+        }
+        
+        // --- Feature Functions ---
+        async function generateProjectPlan(buttonElement) {
+            const parent = buttonElement.closest('li');
+            const title = parent.querySelector('[data-title]').dataset.title;
+            const description = parent.querySelector('[data-description]').dataset.description;
+
+            const prompt = `You are a helpful AI career coach for aspiring chatbot architects. Your task is to expand on a project idea.
+            Project Title: "${title}"
+            Project Description: "${description}"
+            Please provide a detailed plan including:
+            1.  **Key Features**: A bulleted list of 3-5 core features for this project.
+            2.  **Tech Stack**: A bulleted list of recommended technologies (e.g., platforms, languages, libraries).
+            3.  **First Steps**: A numbered list of the first 3 actionable steps to start this project.
+            Format the entire response in Markdown.`;
+            
+            openModal();
+            const responseText = await callGemini(prompt);
+            loaderContainer.style.display = 'none';
+            aiContentContainer.innerHTML = formatAIResponse(responseText);
+        }
+        
+        async function generateWeeklyTasks(weekId) {
+            const weekRow = document.getElementById(weekId);
+            const weekNumber = weekRow.querySelector('td:first-child').innerText;
+            const focusCell = weekRow.querySelector('td:nth-child(2)');
+            const primaryFocus = focusCell.dataset.primary;
+            const secondaryFocus = focusCell.dataset.secondary;
+
+            const prompt = `You are an expert AI tutor creating a study plan. For a student in ${weekNumber}, break down the following topics into a specific, actionable checklist of 5-7 learning tasks.
+            - **Primary Focus**: ${primaryFocus}
+            - **Secondary Focus**: ${secondaryFocus}
+            Present the output as a Markdown formatted checklist.`;
+
+            openModal();
+            const responseText = await callGemini(prompt);
+            loaderContainer.style.display = 'none';
+            aiContentContainer.innerHTML = formatAIResponse(responseText);
+        }
+
+        // --- Standard App Functions ---
+        function showWeek(scheduleType, clickedButton) {
+            document.querySelectorAll('.schedule-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(scheduleType + '-schedule').classList.remove('hidden');
+
+            document.querySelectorAll('.week-selector .week-btn').forEach(btn => btn.classList.remove('active'));
+            clickedButton.classList.add('active');
+        }
+
+        function toggleCheck(checkboxElement) {
+            checkboxElement.classList.toggle('checked');
+            updateStats();
+        }
+
+        function updateStats() {
+            let totalHoursCompleted = 0;
+            let tasksCompleted = 0;
+            const allCheckboxes = document.querySelectorAll('.custom-checkbox');
+            const totalTasks = allCheckboxes.length;
+
+            allCheckboxes.forEach(checkbox => {
+                if (checkbox.classList.contains('checked')) {
+                    tasksCompleted++;
+                    const row = checkbox.closest('tr');
+                    if (row) {
+                        const durationCell = row.querySelector('[data-hours]');
+                        if (durationCell) {
+                           totalHoursCompleted += parseFloat(durationCell.dataset.hours) || 0;
+                        }
+                    }
+                }
+            });
+            
+            document.getElementById('totalHours').textContent = totalHoursCompleted.toFixed(1);
+            const completionRate = totalTasks > 0 ? ((tasksCompleted / totalTasks) * 100).toFixed(0) : 0;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            showWeek('rotation', document.querySelector('.week-btn[data-schedule="rotation"]'));
+            updateStats();
+        });
+    </script>
+</body>
+</html>
