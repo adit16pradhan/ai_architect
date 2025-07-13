@@ -18,11 +18,11 @@ A dynamic single-page application to help aspiring developers plan their journey
 <img width="1416" height="958" alt="2025-07-13-221005_hyprshot" src="https://github.com/user-attachments/assets/17d1dc0f-80f2-4042-918d-e92621fed914" />
 
 
-Check out the live planner deployed on GitHub Pages: **[Live Demo] https://adit16pradhan.github.io/ai_architect/**
+Check out the live planner deployed on GitHub Pages: **https://adit16pradhan.github.io/ai_architect/**
 
 ## 🛠️ Built With
 
 * HTML5
 * Tailwind CSS
 * Vanilla JavaScript
-* Google Gemini API
+
